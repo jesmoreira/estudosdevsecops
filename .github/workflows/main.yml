@@ -1,0 +1,25 @@
+# workflow
+name: CI Principal
+
+# trigger
+on:
+  push:
+    branches: [main]
+
+# jobs
+jobs:
+  # único job
+  build:
+    # máquina virtual
+    runs-on: ubuntu-latest
+
+    # passos job
+    steps:
+      # 1º passo repositório para dentro da máquina virtual
+      # ação pronta da comunidade para pegar código.
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2º passo: mensagem simples no log.
+      - name: Exibe uma mensagem
+        run: echo "Minha pipeline de CI está funcionando!"
