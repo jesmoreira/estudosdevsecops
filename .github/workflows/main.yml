@@ -22,6 +22,6 @@ jobs:
       - name: Roda o Snyk para encontrar vulnerabilidades de segurança (SAST)
         # actions oficial do Snyk
         uses: snyk/actions/setup@master
-      - run: snyk code test --report
+      - run: snyk code test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
