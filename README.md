@@ -9,5 +9,3 @@
 
 
 
-## Cred
-db_password = "Password12345"
