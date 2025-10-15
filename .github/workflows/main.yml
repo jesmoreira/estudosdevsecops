@@ -1,25 +1,27 @@
-# workflow
-name: CI Principal
+name: CI com Snyk Security Scan
 
-# trigger
 on:
   push:
-    branches: [main]
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
-# jobs
 jobs:
-  # único job
-  build:
-    # máquina virtual
+  snyk_scan:
+    name: Snyk Security Scan
     runs-on: ubuntu-latest
+    permissions:
+      # Permissão necessária para o Snyk postar o resultado
+      pull-requests: write
+      contents: read
 
-    # passos job
     steps:
-      # 1º passo repositório para dentro da máquina virtual
-      # ação pronta da comunidade para pegar código.
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # 2º passo: mensagem simples no log.
-      - name: Exibe uma mensagem
-        run: echo "Minha pipeline de CI está funcionando!"
+      - name: Roda o Snyk para encontrar vulnerabilidades de segurança (SAST)
+        # actions oficial do Snyk
+        uses: snyk/actions/setup@master
+      - run: snyk code test --report
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
