@@ -1,25 +1,54 @@
-# workflow
-name: CI Principal
+name: CI com Análise de Segurança Completa
 
-# trigger
 on:
   push:
-    branches: [main]
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
-# jobs
 jobs:
-  # único job
-  build:
-    # máquina virtual
+  # JOB 1: Análise de SAST com Snyk
+  snyk_sast_scan:
+    name: Snyk SAST Scan
     runs-on: ubuntu-latest
-
-    # passos job
+    permissions:
+      security-events: write
+      pull-requests: write
+      contents: read
     steps:
-      # 1º passo repositório para dentro da máquina virtual
-      # ação pronta da comunidade para pegar código.
+      - name: Checkout do código
+        uses: actions/checkout@v4
+      - name: Instala e configura o Snyk
+        uses: snyk/actions/setup@master
+      - name: Roda o Snyk Code (SAST)
+        run: snyk code test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  # NOVO JOB 2: Análise de SCA com Trivy
+  trivy_sca_scan:
+    name: Trivy SCA Scan
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # 2º passo: mensagem simples no log.
-      - name: Exibe uma mensagem
-        run: echo "Minha pipeline de CI está funcionando!"
+      - name: Instala o Node.js para que o Trivy encontre o package-lock.json
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Gera o ficheiro de dependências (passo crucial)
+        run: npm install --package-lock-only
+
+      - name: Roda o Trivy para procurar vulnerabilidades em dependências
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          # analisa o sistema de ficheiros
+          scan-ref: "."
+          # o caminho para analisar
+          exit-code: "1"
+          # faz a pipeline falhar se encontrar QUALQUER vulnerabilidade
+          severity: "CRITICAL,HIGH,MEDIUM,LOW"
+          # níveis de severidade para procurar
