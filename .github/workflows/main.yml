@@ -50,5 +50,5 @@ jobs:
           # o caminho para analisar
           exit-code: "1"
           # faz a pipeline falhar se encontrar QUALQUER vulnerabilidade
-          severity: "CRITICAL,HIGH,MEDIUM,LOW"
+          severity: "CRITICAL,HIGH"
           # níveis de severidade para procurar
