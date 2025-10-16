@@ -1,0 +1,8 @@
+{
+  "name": "minha-jornada-appsec",
+  "version": "1.0.0",
+  "description": "Projeto de estudos de DevSecOps",
+  "dependencies": {
+    "express": "4.18.2"
+  }
+}

@@ -1,0 +1,3 @@
+# excluir diretórios da análise
+exclude:
+  - node_modules/**
